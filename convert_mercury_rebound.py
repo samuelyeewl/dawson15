@@ -34,12 +34,15 @@ def main():
     from argparse import ArgumentParser
     psr = ArgumentParser(description="Convert Mercury6 output into REBOUND archive.")
     psr.add_argument('input_dir', type=str, help='Simulation directory')
+    psr.add_argument('-o', '--output_dir', type=str, help='Output directory.',
+                     default='./rebsims/')
     args = psr.parse_args(args)
     indir = args.input_dir
-    
+    outdir = args.output_dir
+
     sim_name = os.path.basename(os.path.normpath(indir))
 
-# Get surviving planets from element.out
+    # Get surviving planets from element.out
     try:
         el_out = open(os.path.join(indir, 'element.out'), 'r')
         pl_remain = []
@@ -51,7 +54,7 @@ def main():
     except:
         print("Could not find element.out. Run element6.for.")
         raise
-    
+
     # Create simulation
     sim = Simulation()
     sim.units = ('day', 'AU', 'Msun')
@@ -70,7 +73,8 @@ def main():
             t, x, y, z, u, v, w, m = [float(s) for s in final.split()]
             sim.add(m=m, x=x, y=y, z=z, vx=u, vy=v, vz=w)
 
-    sim.save(os.path.join(os.getcwd(), 'rebsims/'+sim_name+'.bin'))
+    outfile = os.path.join(outdir, sim_name+'.bin')
+    sim.save(outfile)
     return
 
 

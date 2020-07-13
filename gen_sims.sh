@@ -10,6 +10,7 @@ if ! [ -d "$1" ]; then
 	exit 1
 fi
 
+export DYLD_LIBRARY_PATH=/anaconda3/lib/
 mv "$1/element.in" "$1/element_o.in"
 cp ./element.in $1
 cp ./element6 $1
